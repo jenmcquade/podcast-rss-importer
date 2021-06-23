@@ -54,7 +54,7 @@ class ImportPodcast extends Command
             return 1;
         }
 
-        $episode_count = count($importer->getData()['channel']?->item);
+        $episode_count = count($importer->getData()['channel']->item);
 
         $importer->setConsoleStatusBar($this->output->createProgressBar($episode_count));
 
