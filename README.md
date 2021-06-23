@@ -51,7 +51,7 @@ You can also run the RSS importer console command by passing the Podcast RSS fee
 | language      | varchar(255) |
 | website_url   | text         |
 | created_at    | timestamp    |
-| updated_at    | timestampe   |
+| updated_at    | timestamp   |
 
 ### episodes
 | Column        | Type         |
@@ -62,7 +62,7 @@ You can also run the RSS importer console command by passing the Podcast RSS fee
 | description   | text         |
 | audio_url     | varchar(512) |
 | created_at    | timestamp    |
-| updated_at    | timestampe   |
+| updated_at    | timestamp   |
 
 ## Included tests
 A few sample feature tests are included.
