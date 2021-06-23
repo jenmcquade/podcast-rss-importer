@@ -28,14 +28,15 @@ You can also run the RSS importer console command by passing the Podcast RSS fee
 `./vendor/bin/sail artisan podcast:import http://your_rss_url.rss`
 
 ## How to verify the imported data
+First, ensure Sail is running: `./vendor/bin/sail up`
 1. Open Adminer using http://localhost:8080
-1. Enter the login information for the local database:
+2. Enter the login information for the local database:
 - Server: mysql
 - Username: sail
 - Password: password
 - Database: rss_import
-1. Click on the `podcasts` or `episodes` tables
-1. Click `Select data` to see the data
+3. Click on the `podcasts` or `episodes` tables
+4. Click `Select data` to see the data
 
 ## MySql Data
 
