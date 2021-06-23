@@ -16,7 +16,7 @@ class PodcastImporter
   private bool $success;
   private Podcast $dbPodcastData;
   private Array $dbEpisodeData;
-  private $consoleStatusBar;
+  private $consoleStatusBar; // Only set from console command calls
 
   public function __construct( string $url )
   {
@@ -28,6 +28,11 @@ class PodcastImporter
     $this->dbEpisodeData = array();
   }
 
+  /**
+   * Use collection data to save Podcast and its Episodes
+   * 
+   * @return bool $this->is_success()
+   */
   public function addPodcastToDb(): bool {
     $podcast = new Podcast;
     $podcast->title = $this->data['channel']->title;
@@ -44,13 +49,16 @@ class PodcastImporter
       $this->success = false;
       $errorCode = $e->errorInfo[1];
       if($errorCode == 1062) {
-        $this->result = 'The Podcast "' . $podcast->title . '" has already been added!';
+        $this->result = '\nThe Podcast "' . $podcast->title . '" has already been added!';
       } else {
         $this->result .= $e->getMessage();
       }
       return $this->is_success();
     }
 
+    /**
+     * Loop through each item in the RSS feed and add as episodes
+     */
     foreach($this->data['channel']->item as $item) {
       $this->addEpisodeToDb($podcast->id, $item);
       if( isset($this->consoleStatusBar) ) {
@@ -64,6 +72,9 @@ class PodcastImporter
     return $this->is_success();
   }
 
+  /**
+   * Use HTTP library to grab RSS data and convert to a Laravel collection
+   */
   private function getRssFeedAsCollection(): Collection {
     $response = Http::get($this->url);
     if (!$response->successful()) {
@@ -73,6 +84,11 @@ class PodcastImporter
     return collect($objData);
   }
 
+  /**
+   * Use dollection data to save episodes. Unlike addPodcastToDb, this is private.
+   * 
+   * @return bool $this->is_success();
+   */
   private function addEpisodeToDb( int $podcastId, object $episodeData ): bool {
     $episode = new Episode;
     $episode->podcast_id = $podcastId;
@@ -98,34 +114,68 @@ class PodcastImporter
     return $this->is_success();
   }
 
-  public function is_success() {
+  /**
+   * Return the success attribute
+   * 
+   * @return bool
+   */
+  public function is_success(): bool {
     return $this->success;
   }
 
-  public function getResult() {
+  /**
+   * Return the result attribute
+   * 
+   * @return string
+   */
+  public function getResult(): string {
     return $this->result;
   }
 
-  public function getData() {
+  /**
+   * Return the data attribute
+   * 
+   * @return Collection
+   */
+  public function getData(): Collection {
     return $this->data;
   }
 
-  public function getDbPodcastData() {
+  /**
+   * Return the Podcast data as a Podcast object, as it was saved to the database
+   * 
+   * @return Podcast
+   */
+  public function getDbPodcastData(): Podcast {
     return $this->dbPodcastData;
   }
 
-  public function getDbEpisodeData() {
+  /**
+   * Return the Episode data for the Podcast as an array of Episode objects, as it was saved to the database
+   * 
+   * @return Array
+   */
+  public function getDbEpisodeData(): Array {
     return $this->dbEpisodeData;
   }
 
+  /**
+   * Helper to set console status bar, used to iterate through episodes
+   */
   public function setConsoleStatusBar( $statusBar ) {
     $this->consoleStatusBar = $statusBar;
   }
 
+  /**
+   * Helper to start the console staus bar, used to iterate through episodes
+   */
   public function startConsoleStatusBar() {
     $this->consoleStatusBar->start();
   }
 
+  /**
+   * Helper to finish the console status bar, used to iterate through episodes
+   */
   public function finishConsoleStatusBar() {
     $this->consoleStatusBar->finish();
   }

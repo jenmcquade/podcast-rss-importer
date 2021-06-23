@@ -61,7 +61,7 @@ class ImportPodcast extends Command
         $importer->startConsoleStatusBar();
 
         try {
-            $importer->addPodcastToDb();
+            $success = $importer->addPodcastToDb();
         } catch (\Exception $e) {
             $this->error('Oops! Something went wrong: ' . $e->getMessage());
             return 1;
@@ -74,6 +74,10 @@ class ImportPodcast extends Command
             $this->line($result);
         }
 
-        return 0;
+        if($success) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
