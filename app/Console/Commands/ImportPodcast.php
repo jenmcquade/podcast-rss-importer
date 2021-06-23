@@ -31,6 +31,8 @@ class ImportPodcast extends Command
         parent::__construct();
     }
 
+
+
     /**
      * Execute the console command.
      *
@@ -38,10 +40,19 @@ class ImportPodcast extends Command
      */
     public function handle(): int
     {
-        if( $this->argument('url') == null ) {
+        /**
+         * Prompt for feed url
+         */
+        $url_regex = '/^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        $url_is_set = preg_match($url_regex, $this->argument('url')) ? true : false;
+        $url = $this->argument('url') === '' ? '' : $this->argument('url');
+        while(false == $url_is_set) {
             $url = $this->ask('What is the RSS feed URL?');
-        } else {
-            $url = $this->argument('url');
+            if($url !== null && preg_match($url_regex, $url)) {
+                $url_is_set = true;
+            } else {
+                $this->line('Invalid URL format.');
+            };
         }
 
         $this->line('Verifying the Podcast ...');
