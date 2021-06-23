@@ -18,6 +18,7 @@ A local Laravel 8 Sail environment with
 
 1. Clone the repo: `git clone https://github.com/jenmcquade/podcast-rss-importer`
 1. Change to project directory: `cd podcast-rss-importer`
+1. Run `php composer.phar install` (You'll need PHP installed on your system, which it is by default on OSX)
 1. Run Laravel Sail: `./vendor/bin/sail up`
 1. Run Artisan Migrate: `./vendor/bin/sail artisan migrate`
 1. Run RSS importer console command `./vendor/bin/sail artisan podcast:import`
